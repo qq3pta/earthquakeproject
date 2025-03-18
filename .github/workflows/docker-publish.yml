@@ -3,8 +3,8 @@ name: Build and Push Docker Image
 on:
   push:
     branches:
-      - main  # Триггер при пуше в main
-  workflow_dispatch:  # Возможность запустить вручную
+      - master  # Было "main", меняем на "master"
+  workflow_dispatch:
 
 jobs:
   build:
