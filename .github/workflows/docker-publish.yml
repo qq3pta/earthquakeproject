@@ -3,25 +3,22 @@ name: Build and Push Docker Image
 on:
   push:
     branches:
-      - master  # Было "main", меняем на "master"
-  workflow_dispatch:
+      - master  # Автоматический запуск при пуше в ветку master
+  workflow_dispatch:  # Возможность запустить вручную
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - name: Checkout репозитория
+        uses: actions/checkout@v3
 
-      - name: Log in to Docker Hub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Войти в Docker Hub
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
-      - name: Build Docker image
-        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/earthquakeproject .
+      - name: Сборка Docker-образа
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/earthquakeproject:latest .
 
-      - name: Push Docker image
-        run: docker push ${{ secrets.DOCKER_USERNAME }}/earthquakeproject
+      - name: Пуш в Docker Hub
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/earthquakeproject:latest
